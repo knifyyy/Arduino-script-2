@@ -1,0 +1,60 @@
+// sanitized_notepad_save_demo.ino
+// Benign demo: open Notepad, type "Hello, world!", save as hello_world_demo.txt, then close.
+// For Arduino-compatible boards that support USB HID (Leonardo, Micro, Pro Micro, etc.)
+
+#include <Keyboard.h>
+
+void setup() {
+  // Give host time to detect the USB device after plugging in / reset
+  delay(3000);
+
+  Keyboard.begin();
+
+  // 1) Open Run dialog: WIN + R
+  Keyboard.press(KEY_LEFT_GUI); // Windows key
+  Keyboard.press('r');
+  delay(150);
+  Keyboard.releaseAll();
+  delay(400); // wait for Run dialog to appear
+
+  // 2) Launch Notepad
+  Keyboard.print("notepad");
+  delay(100);
+  Keyboard.press(KEY_RETURN);
+  Keyboard.release(KEY_RETURN);
+  delay(900); // wait for Notepad to open (increase if system is slow)
+
+  // 3) Type the message
+  Keyboard.print("Hello, world!");
+  Keyboard.print("\r\n"); // new line
+  Keyboard.print("This file was created by a sanitized HID demo.");
+  delay(200);
+
+  // 4) Save the file: Ctrl+S
+  Keyboard.press(KEY_LEFT_CTRL);
+  Keyboard.press('s');
+  delay(150);
+  Keyboard.releaseAll();
+  delay(500); // wait for Save dialog to appear
+
+  // 5) Type filename and press Enter
+  Keyboard.print("hello_world_demo.txt");
+  delay(150);
+  Keyboard.press(KEY_RETURN);
+  Keyboard.release(KEY_RETURN);
+  delay(800); // give save time (increase on slow systems)
+
+  // 6) Close Notepad: Alt+F4
+  Keyboard.press(KEY_LEFT_ALT);
+  Keyboard.press(KEY_F4);
+  delay(150);
+  Keyboard.releaseAll();
+  delay(300);
+
+  // End keyboard HID use; one-shot demo
+  Keyboard.end();
+}
+
+void loop() {
+  // Nothing here — demo runs once in setup() and then stops.
+}
